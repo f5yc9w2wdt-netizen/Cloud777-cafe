@@ -1,0 +1,6 @@
+{
+  "name": "Cloud 777 Cafe",
+  "description": "Premium, elegant, warm and welcoming Auckland cafe website with custom interactive morning concept.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
