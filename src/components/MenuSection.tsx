@@ -2,6 +2,13 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { MenuItem } from '../types';
 
+// Dynamically resolve image assets in Vite
+const imageModules = (import.meta as any).glob('/src/assets/images/*.{png,jpg,jpeg,svg,webp}', { eager: true }) as Record<string, { default: string }>;
+
+function getResolvedImageUrl(path: string): string {
+  return imageModules[path]?.default || path;
+}
+
 const SIGNATURE_DISHES: MenuItem[] = [
   {
     id: 'toasted-bagel-preserves',
@@ -353,7 +360,7 @@ export default function MenuSection() {
                 {/* Horizontal Sliding Image Container */}
                 <div className="w-full md:w-1/2 overflow-hidden rounded-2xl border border-[#E19184]/20 shadow-xs bg-[#F5F9E5]">
                   <motion.img
-                    src={dish.image}
+                    src={getResolvedImageUrl(dish.image)}
                     alt={dish.name}
                     referrerPolicy="no-referrer"
                     className="w-full aspect-4/3 object-cover filter saturate-[0.95]"
@@ -467,7 +474,7 @@ export default function MenuSection() {
                   {/* Horizontal Sliding Image Container */}
                   <div className="w-full md:w-1/2 overflow-hidden rounded-2xl border border-[#E19184]/20 shadow-xs bg-[#F5F9E5]">
                     <motion.img
-                      src={drink.image}
+                      src={getResolvedImageUrl(drink.image)}
                       alt={drink.name}
                       referrerPolicy="no-referrer"
                       className="w-full aspect-4/3 object-cover filter saturate-[0.95]"
@@ -535,7 +542,7 @@ export default function MenuSection() {
                   {/* Horizontal Sliding Image Container */}
                   <div className="w-full md:w-1/2 overflow-hidden rounded-2xl border border-[#E19184]/20 shadow-xs bg-[#F5F9E5]">
                     <motion.img
-                      src={drink.image}
+                      src={getResolvedImageUrl(drink.image)}
                       alt={drink.name}
                       referrerPolicy="no-referrer"
                       className="w-full aspect-4/3 object-cover filter saturate-[0.95]"
