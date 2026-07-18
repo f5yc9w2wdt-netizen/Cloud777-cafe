@@ -72,14 +72,7 @@ export default function App() {
       if (viewportCenter < morningTop) {
         currentActive = '';
       } else if (viewportCenter >= morningTop && viewportCenter < menuTop) {
-        // We are in the morning section block
-        const morningHeight = menuTop - morningTop;
-        const midpoint = morningTop + morningHeight * 0.45;
-        if (viewportCenter < midpoint) {
-          currentActive = 'morning-concept';
-        } else {
-          currentActive = 'sunrise-rituals';
-        }
+        currentActive = 'morning-concept';
       } else if (viewportCenter >= menuTop && viewportCenter < reviewsTop) {
         currentActive = 'menu';
       } else if (viewportCenter >= reviewsTop && viewportCenter < hoursTop) {

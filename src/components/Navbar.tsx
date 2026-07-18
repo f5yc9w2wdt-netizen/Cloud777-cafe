@@ -9,7 +9,6 @@ interface NavbarProps {
 export default function Navbar({ activeSection, onNavigate, isSticky }: NavbarProps) {
   const navItems = [
     { id: 'morning-concept', label: 'Morning Concept' },
-    { id: 'sunrise-rituals', label: 'Sunrise Rituals' },
     { id: 'menu', label: 'Menu' },
     { id: 'reviews', label: 'Reviews' },
     { id: 'hours-location', label: 'Hours & Location' }
