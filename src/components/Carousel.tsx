@@ -133,6 +133,16 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
   const [rotation, setRotation] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const activeIndexRef = useRef<number>(-1);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Refs to allow smooth requestAnimationFrame interpolation
   const targetRotationRef = useRef<number>(0);
@@ -290,7 +300,9 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
         style={{
           width: 'var(--ring-size)',
           height: 'var(--ring-size)',
-          transform: `rotate(-${rotation}deg)`,
+          transform: isMobile 
+            ? `rotate3d(0, 0, 1, -${rotation}deg)` 
+            : `rotate(-${rotation}deg)`,
           right: 'var(--ring-right)',
           border: `1px solid ${colors.accent}20`,
           transition: 'border-color 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
@@ -311,7 +323,9 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
           style={{ 
             backgroundColor: `${colors.accent}05`, 
             border: `1px solid ${colors.accent}15`,
-            transition: 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: isMobile
+              ? 'background-color 1000ms cubic-bezier(0.4, 0, 0.2, 1), border-color 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           <div 
@@ -334,10 +348,12 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
               onClick={() => handleItemClick(idx)}
               className="absolute focus:outline-hidden cursor-pointer"
               style={{
-                transform: `rotate(${itemAngleOffset}deg) translate(calc(var(--item-radius) - var(--item-half-size))) rotate(-${itemAngleOffset}deg) rotate(${rotation}deg)`,
+                transform: isMobile
+                  ? `rotate(${itemAngleOffset}deg) translate3d(calc(var(--item-radius) - var(--item-half-size)), 0px, 0px) rotate(-${itemAngleOffset}deg) rotate(${rotation}deg)`
+                  : `rotate(${itemAngleOffset}deg) translate(calc(var(--item-radius) - var(--item-half-size))) rotate(-${itemAngleOffset}deg) rotate(${rotation}deg)`,
                 width: 'var(--item-size)',
                 height: 'var(--item-size)',
-                transition: 'transform 300ms ease-out',
+                transition: isMobile ? 'none' : 'transform 300ms ease-out',
               }}
             >
               <div 
@@ -346,9 +362,13 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
                   backgroundColor: isActive ? '#F5F9E5' : `${item.bgColor}22`,
                   color: isActive ? '#620607' : `${item.textColor}a0`,
                   border: `1px solid ${isActive ? colors.accent : `${item.accentColor}25`}`,
-                  transform: isActive ? 'scale(1.12)' : 'scale(1)',
+                  transform: isMobile
+                    ? (isActive ? 'scale3d(1.12, 1.12, 1)' : 'scale3d(1, 1, 1)')
+                    : (isActive ? 'scale(1.12)' : 'scale(1)'),
                   boxShadow: isActive ? `0 12px 24px -6px ${colors.accent}30` : 'none',
-                  transition: 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: isMobile
+                    ? 'background-color 1000ms cubic-bezier(0.4, 0, 0.2, 1), color 1000ms cubic-bezier(0.4, 0, 0.2, 1), border-color 1000ms cubic-bezier(0.4, 0, 0.2, 1), transform 1000ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
                 {renderIcon(item.iconName, `w-6 h-6 sm:w-7 sm:h-7 mb-1 sm:mb-2 transition-all duration-1000 ${isActive ? 'scale-110' : 'opacity-70'}`)}
@@ -368,7 +388,9 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
           backgroundColor: `${colors.bg}e0`,
           borderColor: `${colors.accent}25`,
           backdropFilter: 'blur(8px)',
-          transition: 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+          transition: isMobile
+            ? 'background-color 1000ms cubic-bezier(0.4, 0, 0.2, 1), border-color 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+            : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         <button 
@@ -378,7 +400,9 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
             backgroundColor: colors.bg,
             color: colors.text,
             borderColor: `${colors.accent}30`,
-            transition: 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: isMobile
+              ? 'background-color 1000ms cubic-bezier(0.4, 0, 0.2, 1), color 1000ms cubic-bezier(0.4, 0, 0.2, 1), border-color 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
           title="Previous Ambience (Rotate backward)"
         >
@@ -401,7 +425,9 @@ export default function Carousel({ onActiveChange }: CarouselProps) {
             backgroundColor: colors.bg,
             color: colors.text,
             borderColor: `${colors.accent}30`,
-            transition: 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: isMobile
+              ? 'background-color 1000ms cubic-bezier(0.4, 0, 0.2, 1), color 1000ms cubic-bezier(0.4, 0, 0.2, 1), border-color 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
           title="Next Ambience (Rotate forward)"
         >
